@@ -27,28 +27,55 @@ void hello() {
 import "C"
 
 import (
-        "fmt"
-        "reflect"
-        "runtime"
-        "unsafe"
+	"fmt"
+	"reflect"
+	"runtime"
+	"unsafe"
 
-        "github.com/octu0/unsafecgo"
+	"github.com/octu0/unsafecgo"
 )
 
-func helloworld() {
-        p := unsafe.Pointer(reflect.ValueOf(C.hello).Pointer())
+func cgo_helloworld() {
+	fmt.Println("cgo")
 
-        unsafecgo.Call(p)
+	C.hello()
+}
 
-        runtime.KeepAlive(p)
+func unsafecgo_helloworld() {
+	fmt.Println("unsafecgo.Call")
+
+	p := unsafe.Pointer(reflect.ValueOf(C.hello).Pointer())
+	unsafecgo.Call(p) // call C.hello()
+	runtime.KeepAlive(p)
 }
 
 func main() {
-        fmt.Println("cgo")
-        C.hello()
-        fmt.Println("unsafecgo.Call")
-        helloworld()
+	cgo_helloworld()
+	unsafecgo_helloworld()
 }
+```
+
+## Benchmark
+
+```
+goos: darwin
+goarch: amd64
+pkg: github.com/octu0/unsafecgo/benchmark
+cpu: Intel(R) Core(TM) i5-8210Y CPU @ 1.60GHz
+BenchmarkUnsafecgo
+BenchmarkUnsafecgo/cgo/malloc_free
+BenchmarkUnsafecgo/cgo/malloc_free-4              971646              1236 ns/op            1024 B/op          1 allocs/op
+BenchmarkUnsafecgo/unsafecgo/malloc_free
+BenchmarkUnsafecgo/unsafecgo/malloc_free-4       1340142               910.4 ns/op             0 B/op          0 allocs/op
+BenchmarkUnsafecgo/cgo/calc
+BenchmarkUnsafecgo/cgo/calc-4                    3667410               311.5 ns/op             0 B/op          0 allocs/op
+BenchmarkUnsafecgo/unsafecgo/calc
+BenchmarkUnsafecgo/unsafecgo/calc-4             16357767                74.31 ns/op            0 B/op          0 allocs/op
+BenchmarkUnsafecgo/cgo/nop_call
+BenchmarkUnsafecgo/cgo/nop_call-4               17337052                65.60 ns/op            0 B/op          0 allocs/op
+BenchmarkUnsafecgo/unsafecgo/nop_call
+BenchmarkUnsafecgo/unsafecgo/nop_call-4         369709251                3.211 ns/op           0 B/op          0 allocs/op
+PASS
 ```
 
 # License
