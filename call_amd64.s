@@ -34,11 +34,11 @@ TEXT ·CallRP(SB), NOSPLIT, $0
   RET
 
 // func CallCtx(unsafe.Pointer, unsafe.Pointer)
-TEXT ·CallCtx(SB), NOSPLIT, $0
+TEXT ·CallCtx(SB), 0, $2048-16
   MOVQ cfunc+0(FP), AX
   MOVQ arg0+8(FP), DI
   MOVQ SP, BX
-  SUBQ $2048, SP
+  ADDQ $2048, SP
   ANDQ $~15, SP
   CALL AX
   MOVQ BX, SP
@@ -46,11 +46,11 @@ TEXT ·CallCtx(SB), NOSPLIT, $0
   RET
 
 // func CallCtxRC(unsafe.Pointer, unsafe.Pointer) int32
-TEXT ·CallCtxRC(SB), NOSPLIT, $0
+TEXT ·CallCtxRC(SB), 0, $2048-16
   MOVQ cfunc+0(FP), AX
   MOVQ arg0+8(FP), DI
   MOVQ SP, BX
-  SUBQ $2048, SP
+  ADDQ $2048, SP
   ANDQ $~15, SP
   CALL AX
   MOVQ BX, SP
@@ -58,11 +58,11 @@ TEXT ·CallCtxRC(SB), NOSPLIT, $0
   RET
 
 // func CallCtxRP(unsafe.Pointer, unsafe.Pointer) unsafe.Pointer
-TEXT ·CallCtxRP(SB), NOSPLIT, $0
+TEXT ·CallCtxRP(SB), 0, $2048-16
   MOVQ cfunc+0(FP), AX
   MOVQ arg0+8(FP), DI
   MOVQ SP, BX
-  SUBQ $2048, SP
+  ADDQ $2048, SP
   ANDQ $~15, SP
   CALL AX
   MOVQ BX, SP
